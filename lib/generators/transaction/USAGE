@@ -1,0 +1,11 @@
+Description:
+    This generator creates a new dry transaction with the given name and steps.
+    It also creates a contract for the transaction.
+
+Example:
+    bin/rails generate transaction Thing a b
+
+    This will create:
+        app/contracts/thing_contract.rb
+        app/transactions/thing_transaction.rb # with a and b as steps
+        spec/transactions/thing_transaction_spec.rb
