@@ -6,6 +6,6 @@ module Dashboard
     belongs_to :creator, class_name: 'User'
     belongs_to :parent, class_name: 'Dashboard::Post', optional: true
 
-    enum :visibility, { public: 0, friends_only: 1, private: 2 }
+    enum :visibility, { visible: 0, friends_only: 1, invisible: 2 }
   end
 end
