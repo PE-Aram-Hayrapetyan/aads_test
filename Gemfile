@@ -7,6 +7,9 @@ gem "sprockets-rails"
 gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 gem "jbuilder"
+gem 'sidekiq'
+gem 'rswag-api'
+gem 'rswag-ui'
 gem "redis", ">= 4.0.1"
 gem "kredis"
 gem "bcrypt", "~> 3.1.7"
@@ -14,7 +17,18 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 gem "image_processing", "~> 1.2"
 group :development, :test do
-  gem "debug", platforms: %i[ mri windows ]
+  gem 'debug'
+  gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'rspec-rails'
+  gem 'rswag-specs'
+  gem 'rubocop', require: false
+  gem 'rubocop-discourse', require: false
+  gem 'rubocop-factory_bot', require: false
+  gem 'rubocop-graphql', require: false
+  gem 'rubocop-performance', require: false
+  gem 'rubocop-rails', require: false
+  gem 'rubocop-rspec_rails', require: false
 end
 group :development do
   gem "web-console"
