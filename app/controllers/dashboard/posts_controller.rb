@@ -2,11 +2,14 @@
 
 module Dashboard
   class PostsController < AbstractUserController
+    helper AbstractUserHelper
     before_action :set_dashboard_post, only: %i[show edit update destroy]
 
-    # GET /dashboard/posts or /dashboard/posts.json
     def index
-      @dashboard_posts = Dashboard::Post.all
+      with_format(user_id, Dashboard::Post::IndexTransaction) do |result|
+        result.success = proc {}
+        result.failure = proc {}
+      end
     end
 
     # GET /dashboard/posts/1 or /dashboard/posts/1.json
