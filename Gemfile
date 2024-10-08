@@ -1,21 +1,23 @@
-source "https://rubygems.org"
+# frozen_string_literal: true
 
-ruby ">= 3.0.0"
+source 'https://rubygems.org'
 
-gem "rails", "~> 7.1.3", ">= 7.1.3.3"
-gem "sprockets-rails"
-gem "pg", "~> 1.1"
-gem "puma", ">= 5.0"
-gem "jbuilder"
-gem 'sidekiq'
+ruby '>= 3.0.0'
+
+gem 'bcrypt', '~> 3.1.7'
+gem 'bootsnap', require: false
+gem 'image_processing', '~> 1.2'
+gem 'jbuilder'
+gem 'kredis'
+gem 'pg', '~> 1.1'
+gem 'puma', '>= 5.0'
+gem 'rails', '~> 7.1.3', '>= 7.1.3.3'
+gem 'redis', '>= 4.0.1'
 gem 'rswag-api'
 gem 'rswag-ui'
-gem "redis", ">= 4.0.1"
-gem "kredis"
-gem "bcrypt", "~> 3.1.7"
-gem "tzinfo-data", platforms: %i[ windows jruby ]
-gem "bootsnap", require: false
-gem "image_processing", "~> 1.2"
+gem 'sidekiq'
+gem 'sprockets-rails'
+gem 'tzinfo-data', platforms: %i[windows jruby]
 group :development, :test do
   gem 'debug'
   gem 'factory_bot_rails'
@@ -31,7 +33,6 @@ group :development, :test do
   gem 'rubocop-rspec_rails', require: false
 end
 group :development do
-  gem "web-console"
-  gem "rack-mini-profiler"
+  gem 'rack-mini-profiler'
+  gem 'web-console'
 end
-
