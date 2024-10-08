@@ -20,6 +20,7 @@ x-rails-app: &rails-app
   stdin_open: true
   volumes:
     - .:/rails
+    - /rails/node_modules
   depends_on:
     - main-db
     - cache
