@@ -27,6 +27,7 @@ group :development, :test do
   gem 'debug'
   gem 'factory_bot_rails'
   gem 'faker'
+  gem 'foreman'
   gem 'rspec-rails'
   gem 'rswag-specs'
   gem 'rubocop', require: false
