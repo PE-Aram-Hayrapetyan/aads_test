@@ -1,3 +1,3 @@
 # frozen_string_literal: true
-
-json.partial! 'dashboard/posts/dashboard_post', dashboard_post: @dashboard_post
+#
+json.partial! 'generic_transaction_results/show', transaction: result, partial: 'dashboard/posts/dashboard_post'
