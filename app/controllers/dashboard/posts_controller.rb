@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Dashboard
-  class PostsController < ApplicationController
+  class PostsController < AbstractUserController
     before_action :set_dashboard_post, only: %i[show edit update destroy]
 
     # GET /dashboard/posts or /dashboard/posts.json
@@ -67,7 +67,7 @@ module Dashboard
 
     # Only allow a list of trusted parameters through.
     def dashboard_post_params
-      params.require(:dashboard_post).permit(:visability, :content, :post_id)
+      params.require(:dashboard_post).permit(:visibility, :content, :post_id)
     end
   end
 end
