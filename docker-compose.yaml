@@ -27,6 +27,21 @@ x-rails-app: &rails-app
 
 
 services:
+
+
+  main-db:
+    image: postgres:16.2-alpine3.19
+    restart: on-failure
+    healthcheck:
+      test: "pg_isready -U svck"
+    environment:
+      POSTGRES_DB: svck
+      POSTGRES_USER: svck
+      POSTGRES_PASSWORD: "Password123"
+    volumes:
+      - main-db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
   web:
     <<: *rails-app
     command: |
@@ -49,21 +64,6 @@ services:
       - cache
     command: |
       sh -c "bundle install; sh"
-
-  main-db:
-    image: postgres:16.2-alpine3.19
-    restart: on-failure
-    healthcheck:
-      test: "pg_isready -U svck"
-    environment:
-      POSTGRES_DB: svck
-      POSTGRES_USER: svck
-      POSTGRES_PASSWORD: "Password123"
-    volumes:
-      - main-db-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
   cache:
     image: eqalpha/keydb #redis:6.2.6-alpine3.14
     restart: on-failure

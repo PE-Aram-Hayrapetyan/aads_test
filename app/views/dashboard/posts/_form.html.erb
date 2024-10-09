@@ -12,8 +12,8 @@
   <% end %>
 
   <div>
-    <%= form.label :visability, style: "display: block" %>
-    <%= form.number_field :visability %>
+    <%= form.label :visibility, style: "display: block" %>
+    <%= form.select :visibility, options_for_select(Dashboard::Post.visibilities.map {|s| [s.first, s.first]} ), { include_blank:  "-" } %>
   </div>
 
   <div>
@@ -23,8 +23,10 @@
 
   <div>
     <%= form.label :post_id, style: "display: block" %>
-    <%= form.text_field :post_id %>
+    <%= form.text_field :dashboard_post_id %>
   </div>
+
+  <%= form.hidden_field :user_id, value: current_user.id %>
 
   <div>
     <%= form.submit %>

@@ -2,14 +2,15 @@
 
 module Dashboard
   class PostsController < AbstractUserController
-    helper AbstractUserHelper
+    include AbstractUserHelper
     before_action :set_dashboard_post, only: %i[show edit update destroy]
 
     def index
-      with_format(user_id, Dashboard::Post::IndexTransaction) do |result|
-        result.success = proc {}
-        result.failure = proc {}
-      end
+      @dashboard_posts = Dashboard::Post.all
+      # with_format(user_id, Dashboard::Posts::IndexTransaction) do |result|
+      #   result.success = proc {}
+      #   result.failure = proc {}
+      # end
     end
 
     # GET /dashboard/posts/1 or /dashboard/posts/1.json
@@ -26,7 +27,7 @@ module Dashboard
     # POST /dashboard/posts or /dashboard/posts.json
     def create
       @dashboard_post = Dashboard::Post.new(dashboard_post_params)
-
+      @dashboard_post.creator = current_user
       respond_to do |format|
         if @dashboard_post.save
           format.html { redirect_to @dashboard_post, notice: 'Post was successfully created.' }
@@ -70,7 +71,7 @@ module Dashboard
 
     # Only allow a list of trusted parameters through.
     def dashboard_post_params
-      params.require(:dashboard_post).permit(:visibility, :content, :post_id)
+      params.require(:dashboard_post).permit(:visibility, :content, :user_id, :dashboard_post_id)
     end
   end
 end
