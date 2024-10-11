@@ -2,7 +2,18 @@
   "private": true,
   "type": "module",
   "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
+    "typescript": "^5.5.3",
     "vite": "^5.4.8",
+    "vue-tsc": "^2.1.6",
     "vite-plugin-ruby": "^5.1.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.5.10"
   }
 }
