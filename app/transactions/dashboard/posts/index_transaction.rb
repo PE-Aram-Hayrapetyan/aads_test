@@ -9,15 +9,21 @@ module Dashboard
       private
 
       def comments_count
-        'posts.*, (select count(*) from posts as comments where comments.post_id = posts.id) as comments_count'
+        <<~SQL.squish
+          posts.*, (select count(*) from posts as comments where comments.post_id = posts.id) as comments_count
+        SQL
       end
 
       def where_clause
-        'posts.user_id = :user_id or user_friends_relations.user_id = :user_id or posts.visibility = :visibility'
+        <<~SQL.squish
+          posts.user_id = :user_id or user_friends_relations.user_id = :user_id or posts.visibility = :visibility
+        SQL
       end
 
       def joins
-        'left join user_friends_relations on user_friends_relations.other_user_id = posts.user_id'
+        <<~SQL.squish
+          left join user_friends_relations on user_friends_relations.other_user_id = posts.user_id
+        SQL
       end
 
       def posts(input)
