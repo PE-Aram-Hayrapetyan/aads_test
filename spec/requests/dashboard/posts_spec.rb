@@ -13,7 +13,13 @@ RSpec.describe 'Dashboard::Posts', type: :request do
           before { sign_in(user) }
 
           schema type: :object,
-                 '$ref': '#/components/schemas/post',
+                 properties: {
+                   model: {
+                     type: :array,
+                     items: { type: :object, '$ref': '#/components/schemas/post' }
+                   },
+                   server_time: { type: :string }
+                 },
                  required: %w[model server_time]
 
           let(:user) { create(:user) }
@@ -39,10 +45,40 @@ RSpec.describe 'Dashboard::Posts', type: :request do
     end
   end
 
-  xdescribe 'GET /show' do
-    it 'returns http success' do
-      get '/dashboard/posts/show'
-      expect(response).to have_http_status(:success)
+  describe 'GET /show' do
+    path '/users/dashboard/posts/{id}' do
+      get 'Get a single post' do
+        tags 'Dashboard::Posts'
+        produces 'application/json'
+
+        parameter name: :id, in: :path, type: :string, required: true
+
+        response '200', 'post found' do
+          before { sign_in(user) }
+
+          schema type: :object,
+                 properties: {
+                   model: { type: :object, '$ref': '#/components/schemas/post' },
+                   server_time: { type: :string }
+                 },
+                 required: %w[model server_time]
+
+          let(:user) { create(:user) }
+          let(:user_posts) { create(:post, user:) }
+
+          let(:id) { user_posts.id }
+
+          it 'returns a single post', :openapi_strict_schema_validation do |example|
+            submit_request(example.metadata)
+            assert_response_matches_metadata(example.metadata)
+          end
+        end
+
+        response '401', 'user not found' do
+          let(:id) { SecureRandom.uuid }
+          run_test!
+        end
+      end
     end
   end
 
