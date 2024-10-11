@@ -2,9 +2,8 @@
 
 FactoryBot.define do
   factory :post do
-    content { 'MyString' }
-    visibility { 'MyString' }
-    post { nil }
-    user { nil }
+    content { Faker::Lorem.sentence }
+    visibility { Post.visibilities.keys.sample }
+    user { association(:user_id) }
   end
 end

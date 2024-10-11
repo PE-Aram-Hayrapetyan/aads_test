@@ -4,7 +4,11 @@ module Dashboard
   module Posts
     class IndexContract < ApplicationContract
       params do
-        # Define your parameters here...
+        required(:user_id).filled(:string)
+      end
+
+      rule(:user_id) do
+        key.failure('is invalid') unless User.exists?(id: value)
       end
     end
   end

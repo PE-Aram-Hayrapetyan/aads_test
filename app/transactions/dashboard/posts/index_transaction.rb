@@ -17,7 +17,10 @@ module Dashboard
       end
 
       def compile(input)
-        posts = Post.where(user_id: input[:user_id])
+        posts = (Post.where(user_id: input[:user_id]) +
+          UserFriendsRelation.where(user_id: input[:user_id]).map(&:other_user)
+                             .map { |user| Post.where(user_id: user.id) } +
+          Post.where(visibility: :everyone)).flatten.uniq.sort_by(&:created_at)
         Success(posts)
       rescue StandardError => e
         Failure({ error: [e.class.to_s, e.message] })
