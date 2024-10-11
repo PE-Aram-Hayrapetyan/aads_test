@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import {defineProps} from 'vue'
+import UserType from "~/types/UserType";
 
 const props = defineProps<{
-  user: object
+  user: UserType
 }>()
+
 </script>
 
 <template>
   <div>
-    <p> {{props.user.id}} </p>
+    <p> {{ props.user.id }} </p>
   </div>
 </template>
 

@@ -45,7 +45,37 @@ RSpec.configure do |config|
                 type: :array,
                 items: {
                   type: :object,
-                  '$ref': '#/components/schemas/post',
+                  '$ref': '#/components/schemas/comment',
+                  required: %w[id content user visibility created_at comments_count]
+                }
+              },
+
+              model: { type: :string, 'x-nullable': true }
+            },
+            required: %w[id content user visibility created_at comments_count]
+          },
+          comment: {
+            type: :object,
+            properties: {
+              id: { type: :string, format: :uuid },
+              content: { type: :string },
+              user: {
+                type: :object,
+                properties: {
+                  id: { type: :string, format: :uuid },
+                  email: { type: :string, format: :email }
+                },
+                required: %w[id email]
+              },
+              visibility: { type: :string, enum: %w[everyone friends_only nobody] },
+              created_at: { type: :string, format: :'date-time' },
+              parent: { type: :string, nullable: true },
+              comments_count: { type: :integer },
+              comments: {
+                type: :array,
+                items: {
+                  type: :object,
+                  '$ref': '#/components/schemas/comment',
                   required: %w[id content user visibility created_at comments_count]
                 }
               },
