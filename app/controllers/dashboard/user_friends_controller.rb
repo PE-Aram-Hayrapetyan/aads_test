@@ -13,7 +13,10 @@ module Dashboard
       render :show, status: status(@collection), formats: :json
     end
 
-    def update; end
+    def update
+      @collection = Dashboard::Users::Friends::UpdateTransaction.call(id: params[:id])
+      render :show, status: status(@collection), formats: :json
+    end
 
     def destroy
       @collection = Dashboard::Users::Friends::DestroyTransaction.call(id: params[:id])

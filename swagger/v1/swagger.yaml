@@ -3,7 +3,245 @@ openapi: 3.0.1
 info:
   title: API V1
   version: v1
-paths: {}
+paths:
+  "/users/dashboard/friends":
+    get:
+      summary: List of friends
+      tags:
+      - User Friends
+      responses:
+        '200':
+          description: list of friends
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  model:
+                    type: object
+                    properties:
+                      followers:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            user:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                email:
+                                  type: string
+                                  format: email
+                              required:
+                              - id
+                              - email
+                            confirmed:
+                              type: boolean
+                          required:
+                          - id
+                          - user
+                          - confirmed
+                      following:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            user:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                email:
+                                  type: string
+                                  format: email
+                              required:
+                              - id
+                              - email
+                            confirmed:
+                              type: boolean
+                          required:
+                          - id
+                          - user
+                          - confirmed
+                      model:
+                        type: string
+                    required:
+                    - followers
+                    - following
+                    - model
+                  server_time:
+                    type: string
+                    format: date-time
+                required:
+                - model
+                - server_time
+        '401':
+          description: unauthorized
+    post:
+      summary: Create a friend relation
+      tags:
+      - User Friends
+      parameters: []
+      responses:
+        '200':
+          description: friend relation created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  model:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                          email:
+                            type: string
+                            format: email
+                        required:
+                        - id
+                        - email
+                      confirmed:
+                        type: boolean
+                      model:
+                        type: string
+                    required:
+                    - id
+                    - user
+                    - confirmed
+                    - model
+                  server_time:
+                    type: string
+                    format: date-time
+                required:
+                - model
+                - server_time
+        '422':
+          description: unprocessable entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      User:
+                        type: string
+                        required: false
+                        nullable: true
+                      Friend:
+                        type: string
+                        required: false
+                        nullable: true
+                  server_time:
+                    type: string
+                    format: date-time
+                required:
+                - server_time
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                other_user_id:
+                  type: string
+                  format: uuid
+              required:
+              - friend_id
+  "/users/dashboard/friends/{id}":
+    put:
+      summary: Update a friend relation
+      tags:
+      - User Friends
+      parameters:
+      - name: id
+        in: path
+        format: uuid
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: friend relation updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  model:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                          email:
+                            type: string
+                            format: email
+                        required:
+                        - id
+                        - email
+                      confirmed:
+                        type: boolean
+                      model:
+                        type: string
+                    required:
+                    - id
+                    - user
+                    - confirmed
+                    - model
+                  server_time:
+                    type: string
+                    format: date-time
+                required:
+                - model
+                - server_time
+        '422':
+          description: unprocessable entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      Id:
+                        type: string
+                        required: false
+                        nullable: true
+                  server_time:
+                    type: string
+                    format: date-time
+                required:
+                - server_time
+        '401':
+          description: unauthorized
 servers:
 - url: https://{defaultHost}
   variables:
