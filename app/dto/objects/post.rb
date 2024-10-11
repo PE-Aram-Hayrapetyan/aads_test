@@ -2,7 +2,7 @@
 
 module Objects
   class Post
-    attr_reader :id, :content, :user, :visibility, :created_at, :parent, :comments_count
+    attr_reader :id, :content, :user, :visibility, :created_at, :parent, :comments_count, :comments
 
     def initialize(post)
       @id = post.id
@@ -12,6 +12,7 @@ module Objects
       @parent = post.parent
       @comments_count = post.comments_count
       @created_at = post.updated_at
+      @comments = nil
     end
 
     def self.from_array(posts)
