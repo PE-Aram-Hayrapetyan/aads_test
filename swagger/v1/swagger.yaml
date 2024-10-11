@@ -242,6 +242,79 @@ paths:
                 - server_time
         '401':
           description: unauthorized
+    delete:
+      summary: Delete a friend relation
+      tags:
+      - User Friends
+      parameters:
+      - name: id
+        in: path
+        format: uuid
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: friend relation deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  model:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                          email:
+                            type: string
+                            format: email
+                        required:
+                        - id
+                        - email
+                      confirmed:
+                        type: boolean
+                      model:
+                        type: string
+                    required:
+                    - id
+                    - user
+                    - confirmed
+                    - model
+                  server_time:
+                    type: string
+                    format: date-time
+                required:
+                - model
+                - server_time
+        '422':
+          description: unprocessable entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      Id:
+                        type: string
+                        required: false
+                        nullable: true
+                  server_time:
+                    type: string
+                    format: date-time
+                required:
+                - server_time
+        '401':
+          description: unauthorized
 servers:
 - url: https://{defaultHost}
   variables:

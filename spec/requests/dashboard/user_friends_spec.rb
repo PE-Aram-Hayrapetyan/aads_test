@@ -285,4 +285,84 @@ RSpec.describe 'Dashboard::UserFriends', type: :request do
       end
     end
   end
+
+  describe 'DELETE /dashboard/friends/{id}' do
+    let(:friend_relation) { create(:user_friends_relation, user:, other_user:) }
+    let(:id) { friend_relation.id }
+
+    path '/users/dashboard/friends/{id}' do
+      delete 'Delete a friend relation' do
+        tags 'User Friends'
+        consumes 'application/json'
+        produces 'application/json'
+
+        parameter name: :id, in: :path, type: :string, format: :uuid
+
+        response '200', 'friend relation deleted' do
+          before do # rubocop:disable RSpec/ScatteredSetup
+            sign_in user
+          end
+
+          schema type: :object,
+                 properties: {
+                   model: {
+                     type: :object,
+                     properties: {
+                       id: { type: :string, format: :uuid },
+                       user: {
+                         type: :object,
+                         properties: {
+                           id: { type: :string, format: :uuid },
+                           email: { type: :string, format: :email }
+                         },
+                         required: %w[id email]
+                       },
+                       confirmed: { type: :boolean },
+                       model: { type: :string }
+                     },
+                     required: %w[id user confirmed model]
+                   },
+                   server_time: { type: :string, format: :'date-time' }
+                 },
+                 required: %w[model server_time]
+
+          it 'deletes a friend relation', :openapi_strict_schema_validation do |example|
+            submit_request(example.metadata)
+            assert_response_matches_metadata(example.metadata)
+          end
+        end
+
+        response '422', 'unprocessable entity' do
+          before do # rubocop:disable RSpec/ScatteredSetup
+            sign_in user
+          end
+
+          schema type: :object,
+                 properties: {
+                   errors: {
+                     type: :object,
+                     properties: {
+                       Id: { type: :string, required: false, nullable: true }
+                     }
+                   },
+                   server_time: { type: :string, format: :'date-time' }
+                 },
+                 required: %w[server_time]
+
+          context 'when friend relation does not exist' do
+            let(:id) { SecureRandom.uuid }
+
+            it 'returns an error if friend relation does not exist', :openapi_strict_schema_validation do |example|
+              submit_request(example.metadata)
+              expect(response.parsed_body[:errors][:Id]).to eq('is invalid')
+            end
+          end
+        end
+
+        response '401', 'unauthorized' do
+          run_test!
+        end
+      end
+    end
+  end
 end
