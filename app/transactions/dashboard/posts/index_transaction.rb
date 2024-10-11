@@ -8,12 +8,6 @@ module Dashboard
 
       private
 
-      def comments_count
-        <<~SQL.squish
-          posts.*, (select count(*) from posts as comments where comments.post_id = posts.id) as comments_count
-        SQL
-      end
-
       def where_clause
         <<~SQL.squish
           posts.user_id = :user_id or user_friends_relations.user_id = :user_id or posts.visibility = :visibility
