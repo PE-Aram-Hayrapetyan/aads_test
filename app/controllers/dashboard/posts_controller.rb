@@ -24,7 +24,7 @@ module Dashboard
     end
 
     def destroy
-      @collection = Dashboard::Posts::DestroyTransaction.call(user_id: current_user.id, post_id: params[:id])
+      @collection = Dashboard::Posts::DestroyTransaction.call(user_id: current_user.id, id: params[:id])
       render :show, status: status(@collection), formats: :json
     end
 
