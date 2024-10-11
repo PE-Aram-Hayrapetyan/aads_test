@@ -6,8 +6,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :posts, dependent: :destroy, class_name: 'Dashboard::Post'
   has_many :user_friends_relations, dependent: :destroy
 
-  scope :followers, ->(user_id) { where(id: UserFriendRelation.where(other_user_id: user_id).pluck(:user_id)) }
+  scope :followers, ->(user_id) { where(id: UserFriendRelation.where(other_user_id: user_id).select(:user_id)) }
 end
