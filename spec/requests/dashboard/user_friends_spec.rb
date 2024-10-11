@@ -88,4 +88,110 @@ RSpec.describe 'Dashboard::UserFriends', type: :request do
       end
     end
   end
+
+  describe 'POST /dashboard/friends' do
+    let(:params) { { other_user_id: other_user.id } }
+
+    path '/users/dashboard/friends' do
+      post 'Create a friend relation' do
+        tags 'User Friends'
+        consumes 'application/json'
+        produces 'application/json'
+
+        parameter name: :params, in: :body, schema: {
+          type: :object,
+          properties: {
+            other_user_id: { type: :string, format: :uuid }
+          },
+          required: %w[friend_id]
+        }
+
+        response '200', 'friend relation created' do
+          before do # rubocop:disable RSpec/ScatteredSetup
+            sign_in user
+          end
+
+          schema type: :object,
+                 properties: {
+                   model: {
+                     type: :object,
+                     properties: {
+                       id: { type: :string, format: :uuid },
+                       user: {
+                         type: :object,
+                         properties: {
+                           id: { type: :string, format: :uuid },
+                           email: { type: :string, format: :email }
+                         },
+                         required: %w[id email]
+                       },
+                       confirmed: { type: :boolean },
+                       model: { type: :string }
+                     },
+                     required: %w[id user confirmed model]
+                   },
+                   server_time: { type: :string, format: :'date-time' }
+                 },
+                 required: %w[model server_time]
+
+          it 'creates a friend relation', :openapi_strict_schema_validation do |example|
+            submit_request(example.metadata)
+            assert_response_matches_metadata(example.metadata)
+          end
+        end
+
+        response '422', 'unprocessable entity' do
+          before do # rubocop:disable RSpec/ScatteredSetup
+            sign_in user
+          end
+
+          schema type: :object,
+                 properties: {
+                   errors: {
+                     type: :object,
+                     properties: {
+                       User: { type: :string, required: false, nullable: true },
+                       Friend: { type: :string, required: false, nullable: true }
+                     }
+                   },
+                   server_time: { type: :string, format: :'date-time' }
+                 },
+                 required: %w[server_time]
+
+          context 'when befriending self' do
+            let(:params) { { other_user_id: user.id } }
+
+            it 'returns an error if user is trying to befriend themself', :openapi_strict_schema_validation do |example|
+              submit_request(example.metadata)
+              expect(response.parsed_body[:errors][:User]).to eq('are equal')
+            end
+          end
+
+          context "when befriending a user that doesn't exist" do
+            let(:params) { { other_user_id: SecureRandom.uuid } }
+
+            it 'returns an error if user does not exist', :openapi_strict_schema_validation do |example|
+              submit_request(example.metadata)
+              expect(response.parsed_body[:errors][:Friend]).to eq('is invalid')
+            end
+          end
+
+          context 'when already friends with the user' do
+            let(:params) { { other_user_id: other_user.id } }
+
+            it 'returns an error if user is already friends with the other user',
+               :openapi_strict_schema_validation do |example|
+              friends
+              submit_request(example.metadata)
+              expect(response.parsed_body[:errors][:User]).to eq('already friends')
+            end
+          end
+        end
+
+        response '401', 'unauthorized' do
+          run_test!
+        end
+      end
+    end
+  end
 end

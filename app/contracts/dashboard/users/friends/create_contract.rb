@@ -10,17 +10,17 @@ module Dashboard
         end
 
         rule(:user_id) do
-          key.failure('is_invalid') unless User.exists?(id: value)
+          key.failure('is invalid') unless User.exists?(id: value)
         end
 
         rule(:friend_id) do
-          key.failure('is_invalid') unless User.exists?(id: value)
+          key.failure('is invalid') unless User.exists?(id: value)
         end
 
         rule(:user_id, :friend_id) do
-          key.failure('are_equal') if values[:user_id] == values[:friend_id]
+          key.failure('are equal') if values[:user_id] == values[:friend_id]
 
-          key.failure('already_friends') if UserFriendsRelation.exists?(user_id: values[:user_id],
+          key.failure('already friends') if UserFriendsRelation.exists?(user_id: values[:user_id],
                                                                         other_user_id: values[:friend_id])
         end
       end

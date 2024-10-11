@@ -8,11 +8,10 @@ RSpec.describe Dashboard::Users::Friends::DestroyTransaction do
   let(:friend_relation) { create(:user_friends_relation, user:, other_user: friend) }
 
   describe '#call' do
-    subject(:destroy_friend) { described_class.call(user_id: user.id, friend_id: friend.id) }
+    subject(:destroy_friend) { described_class.call(id: friend_relation.id) }
 
     context 'when user and friend exist' do
       it 'returns success' do
-        friend_relation
         expect(destroy_friend).to be_success
       end
 
@@ -24,7 +23,7 @@ RSpec.describe Dashboard::Users::Friends::DestroyTransaction do
 
     context 'when user does not exist' do
       it 'returns failure' do
-        expect(described_class.call(user_id: SecureRandom.uuid, friend_id: friend.id)).to be_failure
+        expect(described_class.call(id: SecureRandom.uuid)).to be_failure
       end
     end
 

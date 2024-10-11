@@ -19,11 +19,12 @@ module Dashboard
         end
 
         def destroy(input)
-          relation = UserFriendsRelation.find_by(user_id: input[:user_id], other_user_id: input[:friend_id])
+          relation = UserFriendsRelation.find(input[:id])
           return Failure({ error: ['friend not found'] }) if relation.blank?
 
-          relation.destroy
-          Success(Objects::Following.new(relation.id))
+          follower = Objects::Following.new(relation.id)
+          relation.destroy!
+          Success(follower)
         rescue StandardError => e
           Failure({ error: [e.class.to_s, e.message] })
         end

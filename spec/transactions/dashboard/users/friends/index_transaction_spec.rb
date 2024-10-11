@@ -27,8 +27,8 @@ RSpec.describe Dashboard::Users::Friends::IndexTransaction do
       end
 
       it 'returns followers and following' do
-        expect(friends.success[:followers]).to eq([other_user_friends_relation])
-        expect(friends.success[:following]).to eq([user_friends_relation])
+        expect(friends.success.followers.first.id).to eq(Objects::Follower.new(other_user_friends_relation.id).id)
+        expect(friends.success.following.first.id).to eq(Objects::Following.new(user_friends_relation.id).id)
       end
     end
 
