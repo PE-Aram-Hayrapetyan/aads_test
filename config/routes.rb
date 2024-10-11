@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   scope :users do
     namespace :dashboard do
-      resources :user_friends, only: %i[index create destroy]
+      resources :friends, controller: :user_friends, only: %i[index create destroy]
     end
   end
   devise_for :users
