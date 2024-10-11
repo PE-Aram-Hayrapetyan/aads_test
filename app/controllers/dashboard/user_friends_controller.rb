@@ -8,10 +8,15 @@ module Dashboard
     end
 
     def create
-      @collection = Dashboard::Users::Friends::IndexTransaction.call(user_id: current_user)
+      @collection = Dashboard::Users::Friends::CreateTransaction.call(user_id: current_user,
+                                                                      friend_id: params[:other_user_id])
       render :show, status: status(@collection), formats: :json
     end
 
-    def destroy; end
+    def destroy
+      @collection = Dashboard::Users::Friends::DestroyTransaction.call(user_id: current_user,
+                                                                       friend_id: params[:other_user_id])
+      render :show, status: status(@collection), formats: :json
+    end
   end
 end
