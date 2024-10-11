@@ -3,7 +3,11 @@
 Rails.application.routes.draw do
   scope :users do
     namespace :dashboard do
-      resources :friends, controller: :user_friends, only: %i[index create destroy update]
+      resources :friends, controller: :user_friends, only: %i[index create destroy update] do
+        collection do
+          post :search
+        end
+      end
       resources :posts, controller: :posts, only: %i[index show create update destroy]
     end
   end

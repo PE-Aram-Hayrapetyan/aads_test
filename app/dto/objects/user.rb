@@ -9,6 +9,10 @@ module Objects
       compile
     end
 
+    def self.from_array(users)
+      users.map { |user| new(user.id) }
+    end
+
     private
 
     def compile

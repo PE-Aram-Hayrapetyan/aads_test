@@ -22,5 +22,10 @@ module Dashboard
       @collection = Dashboard::Users::Friends::DestroyTransaction.call(id: params[:id])
       render :show, status: status(@collection), formats: :json
     end
+
+    def search
+      @collection = Dashboard::Users::Friends::SearchTransaction.call(user_id: current_user.id, query: params[:query])
+      render :show, status: status(@collection), formats: :json
+    end
   end
 end
