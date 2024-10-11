@@ -8,6 +8,18 @@ module Dashboard
 
       private
 
+      def comments_count
+        'posts.*, (select count(*) from posts as comments where comments.post_id = posts.id) as comments_count'
+      end
+
+      def where_clause
+        'posts.user_id = :user_id or user_friends_relations.user_id = :user_id or posts.visibility = :visibility'
+      end
+
+      def joins
+        'left join user_friends_relations on user_friends_relations.other_user_id = posts.user_id'
+      end
+
       def validate(input)
         contract = Posts::IndexContract.new
         result = contract.call(input)
@@ -18,13 +30,12 @@ module Dashboard
 
       def compile(input)
         posts = Post
-                  .includes(:comments)
-                  .joins('left join user_friends_relations on user_friends_relations.other_user_id = posts.user_id')
-                  .where('posts.user_id = :user_id or user_friends_relations.user_id = :user_id or posts.visibility = :visibility',
-                         user_id: input[:user_id], visibility: Post.visibilities[:everyone])
-                  .distinct
-                  .select('posts.*, (SELECT COUNT(*) FROM posts AS comments WHERE comments.post_id = posts.id) AS comments_count')
-                  .order(:created_at)
+                .includes(:comments)
+                .joins(joins)
+                .where(where_clause, user_id: input[:user_id], visibility: Post.visibilities[:everyone])
+                .distinct
+                .select(comments_count)
+                .order(:created_at)
 
         Success(Objects::Post.from_array(posts))
       rescue StandardError => e
