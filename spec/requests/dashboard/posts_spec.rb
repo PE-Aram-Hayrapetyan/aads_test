@@ -92,10 +92,74 @@ RSpec.describe 'Dashboard::Posts', type: :request do
     end
   end
 
-  xdescribe 'GET /create' do
-    it 'returns http success' do
-      get '/dashboard/posts/create'
-      expect(response).to have_http_status(:success)
+  describe 'GET /create' do
+    path '/users/dashboard/posts' do
+      post 'Create a post' do
+        tags 'Dashboard::Posts'
+        consumes 'application/json'
+        produces 'application/json'
+
+        parameter name: :params, in: :body, schema: {
+          type: :object,
+          properties: {
+            post: {
+              type: :object,
+              properties: {
+                content: { type: :string },
+                visibility: { type: :string, enum: Post.visibilities.keys }
+              }
+            }
+          }
+        }
+
+        response '200', 'post created' do
+          before { sign_in(user) } # rubocop:disable RSpec/ScatteredSetup
+
+          schema type: :object,
+                 properties: {
+                   model: { type: :object, '$ref': '#/components/schemas/post' },
+                   server_time: { type: :string }
+                 },
+                 required: %w[model server_time]
+
+          let(:user) { create(:user) }
+          let(:params) { attributes_for(:post) }
+
+          it 'creates a post', :openapi_strict_schema_validation do |example| # rubocop:disable RSpec/RepeatedExample
+            submit_request(example.metadata)
+            assert_response_matches_metadata(example.metadata)
+          end
+        end
+
+        response '401', 'user not found' do
+          let(:params) { attributes_for(:post) }
+          run_test!
+        end
+
+        response '422', 'invalid request' do
+          before { sign_in(user) } # rubocop:disable RSpec/ScatteredSetup
+
+          let(:user) { create(:user) }
+          let(:params) { { post: { content: nil, visibility: 'none' } } }
+
+          schema type: :object,
+                 properties: {
+                   errors: {
+                     type: :object,
+                     properties: {
+                       Content: { type: :string },
+                       Visibility: { type: :string }
+                     }
+                   },
+                   server_time: { type: :string }
+                 }
+
+          it 'returns error message', :openapi_strict_schema_validation do |example| # rubocop:disable RSpec/RepeatedExample
+            submit_request(example.metadata)
+            assert_response_matches_metadata(example.metadata)
+          end
+        end
+      end
     end
   end
 
