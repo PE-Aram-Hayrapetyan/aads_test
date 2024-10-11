@@ -2,7 +2,7 @@
 
 module Objects
   class Post
-    attr_reader :id, :content, :user, :visibility, :created_at, :parent, :comments_count, :comments
+    attr_reader :id, :content, :user, :visibility, :created_at, :parent, :comments_count, :comments, :model
 
     def initialize(post)
       @id = post.id
@@ -13,6 +13,7 @@ module Objects
       @comments_count = post.comments.count
       @created_at = post.updated_at
       @comments = recursive_build_comments(post)
+      @model = self.class.name
     end
 
     def self.from_array(posts)

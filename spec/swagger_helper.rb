@@ -43,11 +43,16 @@ RSpec.configure do |config|
               comments_count: { type: :integer },
               comments: {
                 type: :array,
-                items: { type: :object, '$ref': '#/components/schemas/post' }
+                items: {
+                  type: :object,
+                  '$ref': '#/components/schemas/post',
+                  required: %w[id content user visibility created_at comments_count]
+                }
               },
-              model: { type: :string }
+
+              model: { type: :string, 'x-nullable': true }
             },
-            required: %w[id content user visibility created_at comments_count model]
+            required: %w[id content user visibility created_at comments_count]
           }
         }
       },

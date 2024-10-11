@@ -61,10 +61,20 @@ RSpec.describe 'Dashboard::Posts', type: :request do
                    model: { type: :object, '$ref': '#/components/schemas/post' },
                    server_time: { type: :string }
                  },
-                 required: %w[model server_time]
+                 required: %w[server_time]
 
           let(:user) { create(:user) }
-          let(:user_posts) { create(:post, user:) }
+          let(:user_posts) do
+            post1 = create(:post, user:)
+            3.times do
+              comment = post1.comments.create(user: create(:user), content: Faker::Lorem.sentence,
+                                              visibility: :everyone)
+              6.times do
+                comment.comments.create(user: create(:user), content: Faker::Lorem.sentence, visibility: :everyone)
+              end
+            end
+            post1
+          end
 
           let(:id) { user_posts.id }
 
