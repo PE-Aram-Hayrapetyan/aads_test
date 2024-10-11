@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  namespace :dashboard do
-  end
   scope :users do
     namespace :dashboard do
       resources :friends, controller: :user_friends, only: %i[index create destroy update]
