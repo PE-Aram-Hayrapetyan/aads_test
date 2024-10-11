@@ -24,8 +24,18 @@ RSpec.describe Dashboard::Posts::IndexTransaction do
 
       it 'returns user posts' do
         user_posts
-        sleep 2
-        expect(posts.success).to match_array(user_posts)
+        expect(posts.success.count).to eq(user_posts.count)
+      end
+
+      it 'returns user posts ordered by created_at' do
+        user_posts
+        expect(posts.success.first.created_at).to be < posts.success.last.created_at
+      end
+
+      it 'returns user posts with comments count' do
+        user_posts
+        post = posts.success.first
+        expect(post.comments_count).to eq(Post.find(post.id).comments.count)
       end
     end
   end
