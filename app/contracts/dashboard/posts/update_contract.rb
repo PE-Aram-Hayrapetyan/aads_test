@@ -2,9 +2,15 @@
 
 module Dashboard
   module Posts
-    class UpdateContract < ApplicationContract
+    class UpdateContract < CreateContract
       params do
-        # Define your parameters here...
+        required(:id).filled(:string)
+        optional(:content).maybe(:string)
+        optional(:visibility).maybe(:string, included_in?: Post.visibilities.keys)
+      end
+
+      rule(:id) do
+        key.failure('is invalid') unless Post.exists?(id: value)
       end
     end
   end

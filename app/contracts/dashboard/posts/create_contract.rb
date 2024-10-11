@@ -11,14 +11,18 @@ module Dashboard
       end
 
       rule(:content) do
-        key.failure('must be a string') unless value.is_a?(String)
-        key.failure('must be less than 1000 characters') if value.length > 1000
-        key.failure('must be at least 1 character') if value.empty?
+        if value.present?
+          key.failure('must be a string') unless value.is_a?(String)
+          key.failure('must be less than 1000 characters') if value.length > 1000
+          key.failure('must be at least 1 character') if value.empty?
+        end
       end
 
       rule(:visibility) do
-        key.failure('must be a string') unless value.is_a?(String)
-        key.failure("must be one of: #{Post.visibilities.keys.join(', ')}") unless Post.visibilities.key?(value)
+        if value.present?
+          key.failure('must be a string') unless value.is_a?(String)
+          key.failure("must be one of: #{Post.visibilities.keys.join(', ')}") unless Post.visibilities.key?(value)
+        end
       end
 
       rule(:user_id) do
