@@ -18,7 +18,8 @@ module Dashboard
     end
 
     def update
-      @collection = Dashboard::Posts::UpdateTransaction.call(post_params.merge(user_id: current_user.id).to_h)
+      @collection = Dashboard::Posts::UpdateTransaction.call(post_params.merge(user_id: current_user.id,
+                                                                               id: params[:id]).to_h)
       render :show, status: status(@collection), formats: :json
     end
 

@@ -163,10 +163,77 @@ RSpec.describe 'Dashboard::Posts', type: :request do
     end
   end
 
-  xdescribe 'GET /update' do
-    it 'returns http success' do
-      get '/dashboard/posts/update'
-      expect(response).to have_http_status(:success)
+  describe 'GET /update' do
+    path '/users/dashboard/posts/{id}' do
+      put 'Update a post' do
+        tags 'Dashboard::Posts'
+        consumes 'application/json'
+        produces 'application/json'
+
+        parameter name: :id, in: :path, type: :string, required: true
+        parameter name: :params, in: :body, schema: {
+          type: :object,
+          properties: {
+            post: {
+              type: :object,
+              properties: {
+                content: { type: :string },
+                visibility: { type: :string, enum: Post.visibilities.keys }
+              }
+            }
+          }
+        }
+
+        response '200', 'post updated' do
+          before { sign_in(user) } # rubocop:disable RSpec/ScatteredSetup
+
+          schema type: :object,
+                 properties: {
+                   model: { type: :object, '$ref': '#/components/schemas/post' },
+                   server_time: { type: :string }
+                 },
+                 required: %w[model server_time]
+
+          let(:user) { create(:user) }
+          let(:post) { create(:post, user:) }
+          let(:id) { post.id }
+          let(:params) { { post: { content: 'content', visibility: 'everyone' } } }
+
+          it 'updates a post', :openapi_strict_schema_validation do |example|
+            submit_request(example.metadata)
+            assert_response_matches_metadata(example.metadata)
+          end
+        end
+
+        response '401', 'user not found' do
+          let(:id) { SecureRandom.uuid }
+          let(:params) { attributes_for(:post) }
+          run_test!
+        end
+
+        response '422', 'invalid request' do
+          before { sign_in(user) } # rubocop:disable RSpec/ScatteredSetup
+
+          let(:user) { create(:user) }
+          let(:post) { create(:post, user:) }
+          let(:id) { post.id }
+          let(:params) { { post: { content: nil, visibility: 'none' } } }
+
+          schema type: :object,
+                 properties: {
+                   errors: {
+                     type: :object,
+                     properties: {
+                       Content: { type: :string },
+                       Visibility: { type: :string }
+                     }
+                   },
+                   server_time: { type: :string }
+                 }
+
+          run_test!
+        end
+      end
     end
   end
 
