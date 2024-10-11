@@ -215,3 +215,20 @@ export type DeleteUsersDashboardFriendsByIdError = (unknown | {
     };
     server_time: string;
 });
+
+export type PostUsersDashboardFriendsSearchData = {
+    body?: {
+        query: string;
+    };
+};
+
+export type PostUsersDashboardFriendsSearchResponse = ({
+    model: Array<{
+        id: string;
+        email: string;
+        model?: string;
+    }>;
+    server_time: string;
+});
+
+export type PostUsersDashboardFriendsSearchError = (unknown);
