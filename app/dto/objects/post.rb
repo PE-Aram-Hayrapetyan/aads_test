@@ -12,7 +12,7 @@ module Objects
       @parent = post.parent
       @comments_count = post.comments_count
       @created_at = post.updated_at
-      @comments = nil
+      @comments = post.comments
     end
 
     def self.from_array(posts)

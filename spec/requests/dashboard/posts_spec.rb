@@ -13,34 +13,7 @@ RSpec.describe 'Dashboard::Posts', type: :request do
           before { sign_in(user) }
 
           schema type: :object,
-                 properties: {
-                   model: {
-                     type: :array,
-                     items: {
-                       type: :object,
-                       properties: {
-                         id: { type: :string, format: :uuid },
-                         content: { type: :string },
-                         user: {
-                           type: :object,
-                           properties: {
-                             id: { type: :string, format: :uuid },
-                             email: { type: :string, format: :email }
-                           },
-                           required: %w[id email]
-                         },
-                         visibility: { type: :string },
-                         created_at: { type: :string, format: :'date-time' },
-                         parent: { type: :string, nullable: true },
-                         comments_count: { type: :integer },
-                         comments: { type: :string, nullable: true },
-                         model: { type: :string }
-                       },
-                       required: %w[id content user visibility created_at parent comments_count comments model]
-                     }
-                   },
-                   server_time: { type: :string, format: :'date-time' }
-                 },
+                 '$ref': '#/components/schemas/post',
                  required: %w[model server_time]
 
           let(:user) { create(:user) }

@@ -18,7 +18,6 @@ module Dashboard
 
       def compile(input)
         post = Post.find(input[:post_id])
-
         Success(post)
       rescue StandardError => e
         Failure({ error: [e.class.to_s, e.message] })

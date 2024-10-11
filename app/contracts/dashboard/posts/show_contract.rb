@@ -2,9 +2,13 @@
 
 module Dashboard
   module Posts
-    class ShowContract < ApplicationContract
+    class ShowContract < IndexContract
       params do
-        # Define your parameters here...
+        required(:post_id).filled(:string)
+      end
+
+      rule(:post_id) do
+        key.failure('is invalid') unless Post.exists?(value)
       end
     end
   end

@@ -4,6 +4,24 @@ info:
   title: API V1
   version: v1
 paths:
+  "/users/dashboard/posts":
+    get:
+      summary: Get all posts
+      tags:
+      - Dashboard::Posts
+      responses:
+        '200':
+          description: posts found
+          content:
+            application/json:
+              schema:
+                type: object
+                "$ref": "#/components/schemas/post"
+                required:
+                - model
+                - server_time
+        '401':
+          description: user not found
   "/users/dashboard/friends":
     get:
       summary: List of friends
@@ -315,6 +333,63 @@ paths:
                 - server_time
         '401':
           description: unauthorized
+components:
+  schemas:
+    post:
+      type: object
+      properties:
+        model:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              content:
+                type: string
+              user:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  email:
+                    type: string
+                    format: email
+                required:
+                - id
+                - email
+              visibility:
+                type: string
+              created_at:
+                type: string
+                format: date-time
+              parent:
+                type: string
+                nullable: true
+              comments_count:
+                type: integer
+              comments:
+                type: array
+                items:
+                  type: object
+                  "$ref": "#/components/schemas/post"
+              model:
+                type: string
+            required:
+            - id
+            - content
+            - user
+            - visibility
+            - created_at
+            - parent
+            - comments_count
+            - comments
+            - model
+        server_time:
+          type: string
+          format: date-time
 servers:
 - url: https://{defaultHost}
   variables:
