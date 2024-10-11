@@ -32,7 +32,6 @@ module Dashboard
           .joins(joins)
           .where(where_clause, user_id: input[:user_id], visibility: Post.visibilities[:everyone])
           .distinct
-          .select(comments_count)
           .order(:created_at)
       end
 

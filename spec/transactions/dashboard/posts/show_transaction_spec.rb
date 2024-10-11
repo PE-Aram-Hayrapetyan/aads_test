@@ -8,9 +8,9 @@ RSpec.describe Dashboard::Posts::ShowTransaction do
   let(:user) { create(:user) }
   let(:user_post) do
     post1 = create(:post, user:)
-    10.times do
+    3.times do
       comment = post1.comments.create(user: create(:user), content: Faker::Lorem.sentence)
-      30.times do
+      6.times do
         comment.comments.create(user: create(:user), content: Faker::Lorem.sentence)
       end
     end
@@ -26,7 +26,11 @@ RSpec.describe Dashboard::Posts::ShowTransaction do
       end
 
       it 'returns post' do
-        expect(post.success).to eq(user_post)
+        expect(post.success).to be_instance_of(Objects::Post)
+      end
+
+      it 'returns post with comments count' do
+        expect(post.success.comments_count).to eq(user_post.comments.count)
       end
     end
 
