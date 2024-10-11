@@ -19,7 +19,7 @@ module Dashboard
       def create(input)
         post = Post.create!(input)
 
-        Success(post)
+        Success(Objects::Post.new(post))
       rescue StandardError => e
         Failure({ error: [e.class.to_s, e.message] })
       end
