@@ -20,10 +20,10 @@ module Dashboard
 
         def compile(input)
           user = User.find(input[:user_id])
-          Success({
-                    followers: user.followers,
-                    following: user.following
-                  })
+          Success(Objects::Friends.new({
+                                         followers: user.followers,
+                                         following: user.following
+                                       }))
         rescue StandardError => e
           Failure({ error: [e.class.to_s, e.message] })
         end

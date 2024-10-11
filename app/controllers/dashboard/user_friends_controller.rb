@@ -3,7 +3,7 @@
 module Dashboard
   class UserFriendsController < Dashboard::AbstractUserController
     def index
-      @collection = Dashboard::Users::Friends::IndexTransaction.call(user_id: current_user)
+      @collection = Dashboard::Users::Friends::IndexTransaction.call(user_id: current_user.id)
       render :show, status: status(@collection), formats: :json
     end
 
@@ -12,6 +12,8 @@ module Dashboard
                                                                       friend_id: params[:other_user_id])
       render :show, status: status(@collection), formats: :json
     end
+
+    def update; end
 
     def destroy
       @collection = Dashboard::Users::Friends::DestroyTransaction.call(user_id: current_user,

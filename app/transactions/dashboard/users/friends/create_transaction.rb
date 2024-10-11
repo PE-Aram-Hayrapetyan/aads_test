@@ -20,7 +20,7 @@ module Dashboard
 
         def create(input)
           relation = UserFriendsRelation.create!(user_id: input[:user_id], other_user_id: input[:friend_id])
-          Success(relation)
+          Success(Objects::Following.new(relation.id))
         rescue StandardError => e
           Failure({ error: [e.class.to_s, e.message] })
         end
