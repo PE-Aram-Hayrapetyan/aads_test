@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
 rm -rf tmp/cache
+docker compose build test
 docker compose run --rm test bundle install
 docker compose run --rm test bundle exec rails db:reset
 docker compose run --rm test bundle exec rails rswag:specs:swaggerize
