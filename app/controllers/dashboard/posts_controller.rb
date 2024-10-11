@@ -3,7 +3,7 @@
 module Dashboard
   class PostsController < AbstractUserController
     def index
-      @collection = Dashboard::Posts::Index.call(user_id: current_user.id)
+      @collection = Dashboard::Posts::IndexTransaction.call(user_id: current_user.id)
       render :show, status: status(@collection), formats: :json
     end
 

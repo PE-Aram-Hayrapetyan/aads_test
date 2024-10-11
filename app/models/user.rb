@@ -10,4 +10,5 @@ class User < ApplicationRecord
   has_many :followers, class_name: 'UserFriendsRelation', foreign_key: 'other_user_id', dependent: :destroy,
                        inverse_of: :other_user
   has_many :following, class_name: 'UserFriendsRelation', dependent: :destroy, inverse_of: :user
+  has_many :posts, dependent: :destroy
 end
