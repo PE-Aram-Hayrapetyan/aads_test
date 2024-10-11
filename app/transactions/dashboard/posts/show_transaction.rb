@@ -18,9 +18,6 @@ module Dashboard
 
       def compile(input)
         post = Post.includes(:comments).find(input[:post_id])
-        Benchmark.bm do |x|
-          x.report { Objects::Post.new(post) }
-        end
         Success(Objects::Post.new(post))
       rescue StandardError => e
         Failure({ error: [e.class.to_s, e.message] })
