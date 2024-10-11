@@ -6,7 +6,7 @@ RSpec.describe 'Dashboard::UserFriends', type: :request do
   describe 'GET /index' do
     it 'returns http success' do
       get '/dashboard/user_friends/index'
-      expect(response).to have_http_status(:success)
+      expect(response).to be_success(:success)
     end
   end
 

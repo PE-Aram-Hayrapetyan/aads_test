@@ -7,6 +7,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :user_friends_relations, dependent: :destroy
-
-  scope :followers, ->(user_id) { where(id: UserFriendRelation.where(other_user_id: user_id).select(:user_id)) }
+  has_many :followers, class_name: 'UserFriendsRelation', foreign_key: 'other_user_id', dependent: :destroy,
+                       inverse_of: :other_user
+  has_many :following, class_name: 'UserFriendsRelation', dependent: :destroy, inverse_of: :user
 end

@@ -2,6 +2,7 @@
 
 module Dashboard
   class AbstractUserController < ApplicationController
+    include AbstractUserHelper
     before_action :authenticate_user!
 
     private
