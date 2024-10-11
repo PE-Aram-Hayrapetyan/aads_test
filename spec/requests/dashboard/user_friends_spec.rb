@@ -365,4 +365,59 @@ RSpec.describe 'Dashboard::UserFriends', type: :request do
       end
     end
   end
+
+  describe 'POST /dashboard/friends/search' do
+    let(:friend) { create(:user) }
+    let(:params) { { query: friend.email[..3] } }
+
+    path '/users/dashboard/friends/search' do
+      post 'Search for friends' do
+        tags 'User Friends'
+        consumes 'application/json'
+        produces 'application/json'
+
+        parameter name: :params, in: :body, schema: {
+          type: :object,
+          properties: {
+            query: { type: :string }
+          },
+          required: %w[query]
+        }
+
+        response '200', 'list of users' do
+          before do
+            sign_in user
+            friend
+          end
+
+          schema type: :object,
+                 properties: {
+                   model: {
+                     type: :array,
+                     items: {
+                       type: :object,
+                       properties: {
+                         id: { type: :string, format: :uuid },
+                         email: { type: :string, format: :email },
+                         model: { type: :string }
+                       },
+                       required: %w[id email]
+                     }
+                   },
+                   server_time: { type: :string, format: :'date-time' }
+                 },
+                 required: %w[model server_time]
+
+          it 'All users that match the query', :openapi_strict_schema_validation do |example|
+            submit_request(example.metadata)
+            assert_response_matches_metadata(example.metadata)
+          end
+        end
+
+        response '401', 'unauthorized' do
+          run_test!
+        end
+      end
+    end
+  end
 end

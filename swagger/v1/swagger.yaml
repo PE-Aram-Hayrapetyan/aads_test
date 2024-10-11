@@ -513,6 +513,54 @@ paths:
                 - server_time
         '401':
           description: unauthorized
+  "/users/dashboard/friends/search":
+    post:
+      summary: Search for friends
+      tags:
+      - User Friends
+      parameters: []
+      responses:
+        '200':
+          description: list of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  model:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        email:
+                          type: string
+                          format: email
+                        model:
+                          type: string
+                      required:
+                      - id
+                      - email
+                  server_time:
+                    type: string
+                    format: date-time
+                required:
+                - model
+                - server_time
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+              required:
+              - query
 components:
   schemas:
     post:
