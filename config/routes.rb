@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  scope :users do
+    namespace :dashboard do
+      resources :user_friends, only: %i[index create destroy]
+    end
+  end
   devise_for :users
   mount Rswag::Ui::Engine => '/api-docs'
   mount Rswag::Api::Engine => '/api-docs'
