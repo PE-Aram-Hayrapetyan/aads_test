@@ -17,10 +17,11 @@ module Dashboard
       end
 
       def compile(input)
-        posts = (Post.where(user_id: input[:user_id]) +
-          UserFriendsRelation.where(user_id: input[:user_id]).map(&:other_user)
-                             .map { |user| Post.where(user_id: user.id) } +
-          Post.where(visibility: :everyone)).flatten.uniq.sort_by(&:created_at)
+        posts = Post.joins('left join user_friends_relations on user_friends_relations.other_user_id = posts.user_id')
+                    .where('posts.user_id = :user_id or user_friends_relations.user_id = :user_id or posts.visibility = :visibility',
+                           user_id: input[:user_id], visibility: Post.visibilities[:everyone])
+                    .distinct
+                    .order(:created_at)
         Success(posts)
       rescue StandardError => e
         Failure({ error: [e.class.to_s, e.message] })
