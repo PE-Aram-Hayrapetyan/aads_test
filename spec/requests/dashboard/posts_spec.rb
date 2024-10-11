@@ -25,11 +25,9 @@ RSpec.describe 'Dashboard::Posts', type: :request do
                            type: :object,
                            properties: {
                              id: { type: :string, format: :uuid },
-                             email: { type: :string, format: :email },
-                             created_at: { type: :string, format: :'date-time' },
-                             updated_at: { type: :string, format: :'date-time' }
+                             email: { type: :string, format: :email }
                            },
-                           required: %w[id email created_at updated_at]
+                           required: %w[id email]
                          },
                          visibility: { type: :string },
                          created_at: { type: :string, format: :'date-time' },

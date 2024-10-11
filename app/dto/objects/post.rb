@@ -7,7 +7,7 @@ module Objects
     def initialize(post)
       @id = post.id
       @content = post.content
-      @user = post.user
+      @user = User.new(post.user.id)
       @visibility = post.visibility
       @parent = post.parent
       @comments_count = post.comments_count
