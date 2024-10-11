@@ -20,6 +20,16 @@ module Dashboard
         'left join user_friends_relations on user_friends_relations.other_user_id = posts.user_id'
       end
 
+      def posts(input)
+        Post
+          .includes(:comments)
+          .joins(joins)
+          .where(where_clause, user_id: input[:user_id], visibility: Post.visibilities[:everyone])
+          .distinct
+          .select(comments_count)
+          .order(:created_at)
+      end
+
       def validate(input)
         contract = Posts::IndexContract.new
         result = contract.call(input)
@@ -29,15 +39,7 @@ module Dashboard
       end
 
       def compile(input)
-        posts = Post
-                .includes(:comments)
-                .joins(joins)
-                .where(where_clause, user_id: input[:user_id], visibility: Post.visibilities[:everyone])
-                .distinct
-                .select(comments_count)
-                .order(:created_at)
-
-        Success(Objects::Post.from_array(posts))
+        Success(Objects::Post.from_array(posts(input)))
       rescue StandardError => e
         Failure({ error: [e.class.to_s, e.message] })
       end
