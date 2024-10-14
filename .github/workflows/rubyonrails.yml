@@ -16,8 +16,6 @@ jobs:
           bundler-cache: true
       - name: Lint Ruby files
         run: bundle exec rubocop --parallel
-      - name: Set up database schema
-        run: bin/rails db:schema:load
       - name: Run tests
         run: bin/test_in_compose.sh
         env:
