@@ -40,8 +40,8 @@ services:
       POSTGRES_PASSWORD: "Password123"
     volumes:
       - main-db-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+#    ports:
+#      - "5432:5432"
   web:
     <<: *rails-app
     command: |
