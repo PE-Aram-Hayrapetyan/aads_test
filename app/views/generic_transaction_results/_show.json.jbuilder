@@ -6,4 +6,4 @@ end
 json.errors do
   json.partial! 'generic_transaction_results/failure', model: transaction
 end
-json.server_time Time.utc.now
+json.server_time Time.now.utc
