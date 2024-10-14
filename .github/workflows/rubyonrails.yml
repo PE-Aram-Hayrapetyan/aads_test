@@ -31,4 +31,10 @@ jobs:
       - name: Set up database schema
         run: bin/rails db:schema:load
       - name: Run tests
-        run: bundle exec rspec
+        run: bin/test_in_compose.sh
+        env:
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+      - name: Gracefully stop services
+        run: docker compose down
+      - name: Remove containers
+        run: docker container prune -f
